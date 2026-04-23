@@ -129,10 +129,44 @@ namespace ContextMenuManager.Methods
         public static bool JudgeCulture(XmlNode itemXN)
         {
             //return true;//测试用
+            string targetCulture = string.IsNullOrWhiteSpace(AppConfig.Language) ? "en-US" : AppConfig.Language;
             string culture = itemXN.SelectSingleNode("Culture")?.InnerText;
-            if(string.IsNullOrEmpty(culture)) return true;
-            if(culture.Equals(AppConfig.Language, StringComparison.OrdinalIgnoreCase)) return true;
+            if(culture.Equals(targetCulture, StringComparison.OrdinalIgnoreCase)) return true;
             if(culture.Equals(CultureInfo.CurrentUICulture.Name, StringComparison.OrdinalIgnoreCase)) return true;
+
+            // For nodes without explicit culture, prefer a sibling node if it has
+            // a culture that matches current app/UI culture.
+            if(string.IsNullOrEmpty(culture))
+            {
+                bool HasMeaningfulLocalizedValue(XmlNode node)
+                {
+                    if(node == null) return false;
+                    if(node is XmlElement xe)
+                    {
+                        if(!string.IsNullOrWhiteSpace(xe.GetAttribute("Value"))) return true;
+                        if(!string.IsNullOrWhiteSpace(xe.GetAttribute("Text"))) return true;
+                    }
+                    return !string.IsNullOrWhiteSpace(node.InnerText);
+                }
+
+                XmlNode parent = itemXN.ParentNode;
+                if(parent != null)
+                {
+                    foreach(XmlNode sibling in parent.ChildNodes)
+                    {
+                        if(!sibling.Name.Equals(itemXN.Name, StringComparison.OrdinalIgnoreCase)) continue;
+                        if(ReferenceEquals(sibling, itemXN)) continue;
+                        string siblingCulture = sibling.SelectSingleNode("Culture")?.InnerText;
+                        if(string.IsNullOrEmpty(siblingCulture)) continue;
+                        if(siblingCulture.Equals(targetCulture, StringComparison.OrdinalIgnoreCase)
+                            && HasMeaningfulLocalizedValue(sibling)) return false;
+                        if(siblingCulture.Equals(CultureInfo.CurrentUICulture.Name, StringComparison.OrdinalIgnoreCase)
+                            && HasMeaningfulLocalizedValue(sibling)) return false;
+                    }
+                }
+                return true;
+            }
+
             return false;
         }
 

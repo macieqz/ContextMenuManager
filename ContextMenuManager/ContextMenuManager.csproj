@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ContextMenuManager</RootNamespace>
     <AssemblyName>ContextMenuManager</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -398,7 +398,6 @@
     </Compile>
     <Compile Include="Methods\Updater.cs" />
     <Compile Include="Methods\XmlDicHelper.cs" />
-    <None Include="App.config" />
     <None Include="Properties\App.manifest" />
     <None Include="Properties\Resources\ShellNew\0.rar" />
     <None Include="Properties\Resources\ShellNew\0.reg" />
@@ -430,9 +429,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6 %28x86 和 x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 和 x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -477,11 +476,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>mkdir $(TargetDir)\Config\Languages
-mkdir $(TargetDir)\Config\Dictionaries\Web
-xcopy $(ProjectDir)\Properties\Resources\Texts\AppLanguageDic.ini $(SolutionDir)\Languages\zh-CN.ini /y
-xcopy $(SolutionDir)\Languages $(TargetDir)\config\Languages /y
-xcopy $(ProjectDir)\Properties\Resources\Texts $(TargetDir)\Config\Dictionaries\Web /y
-del $(TargetDir)\Config\Dictionaries\Web\AppLanguageDic.ini</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -42,7 +42,11 @@ namespace ContextMenuManager.Controls
                     groupItem = new FoldGroupItem(groupXN.SelectSingleNode(attribute)?.InnerText, pathType);
                     foreach(XmlElement textXE in groupXN.SelectNodes("Text"))
                     {
-                        if(XmlDicHelper.JudgeCulture(textXE)) groupItem.Text = ResourceString.GetDirectString(textXE.GetAttribute("Value"));
+                        if(XmlDicHelper.JudgeCulture(textXE))
+                        {
+                            string candidate = ResourceString.GetDirectString(textXE.GetAttribute("Value"));
+                            if(!candidate.IsNullOrWhiteSpace()) groupItem.Text = candidate;
+                        }
                     }
                     if(guids.Count > 0)
                     {
@@ -88,11 +92,19 @@ namespace ContextMenuManager.Controls
                             ItemInfo info = new ItemInfo();
                             foreach(XmlElement textXE in itemXE.SelectNodes("Text"))
                             {
-                                if(XmlDicHelper.JudgeCulture(textXE)) info.Text = ResourceString.GetDirectString(textXE.GetAttribute("Value"));
+                                if(XmlDicHelper.JudgeCulture(textXE))
+                                {
+                                    string candidate = ResourceString.GetDirectString(textXE.GetAttribute("Value"));
+                                    if(!candidate.IsNullOrWhiteSpace()) info.Text = candidate;
+                                }
                             }
                             foreach(XmlElement tipXE in itemXE.SelectNodes("Tip"))
                             {
-                                if(XmlDicHelper.JudgeCulture(tipXE)) info.Tip = ResourceString.GetDirectString(tipXE.GetAttribute("Value"));
+                                if(XmlDicHelper.JudgeCulture(tipXE))
+                                {
+                                    string candidate = ResourceString.GetDirectString(tipXE.GetAttribute("Value"));
+                                    if(!candidate.IsNullOrWhiteSpace()) info.Tip = candidate;
+                                }
                             }
                             info.RestartExplorer = itemXE.SelectSingleNode("RestartExplorer") != null;
 

@@ -147,13 +147,19 @@ namespace ContextMenuManager.Methods
                 }
                 if(itemText.IsNullOrWhiteSpace())
                 {
-                    string uiText = CultureInfo.CurrentUICulture.Name + "-Text";
-                    TryGetValue(guid, uiText, out itemText);
+                    string appCulture = string.IsNullOrWhiteSpace(AppConfig.Language) ? "en-US" : AppConfig.Language;
+                    string appTextKey = appCulture + "-Text";
+                    TryGetValue(guid, appTextKey, out itemText);
+                    if(itemText.IsNullOrWhiteSpace())
+                    {
+                        string uiText = CultureInfo.CurrentUICulture.Name + "-Text";
+                        TryGetValue(guid, uiText, out itemText);
+                    }
                     if(itemText.IsNullOrWhiteSpace())
                     {
                         TryGetValue(guid, "Text", out itemText);
-                        itemText = ResourceString.GetDirectString(itemText);
                     }
+                    itemText = ResourceString.GetDirectString(itemText);
                 }
                 if(itemText.IsNullOrWhiteSpace())
                 {

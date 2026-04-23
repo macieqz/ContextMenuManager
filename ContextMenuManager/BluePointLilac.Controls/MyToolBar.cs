@@ -12,7 +12,7 @@ namespace BluePointLilac.Controls
             this.Height = 80.DpiZoom();
             this.Dock = DockStyle.Top;
             this.DoubleBuffered = true;
-            this.BackColor = Color.FromArgb(85, 145, 215);
+            this.BackColor = Color.FromArgb(33, 33, 33);
         }
 
         private MyToolBarButton selectedButton;

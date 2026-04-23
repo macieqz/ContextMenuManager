@@ -12,8 +12,8 @@ namespace BluePointLilac.Controls
             this.ReadOnly = true;
             this.Multiline = true;
             this.ShortcutsEnabled = false;
-            this.BackColor = Color.White;
-            this.ForeColor = Color.FromArgb(80, 80, 80);
+            this.BackColor = Color.FromArgb(38, 38, 38);
+            this.ForeColor = Color.FromArgb(236, 239, 241);
             this.Font = SystemFonts.MenuFont;
             this.Font = new Font(this.Font.FontFamily, this.Font.Size + 1F);
         }
@@ -46,9 +46,9 @@ namespace BluePointLilac.Controls
         {
             this.ReadOnly = true;
             this.Dock = DockStyle.Fill;
-            this.BackColor = Color.White;
+            this.BackColor = Color.FromArgb(38, 38, 38);
             this.BorderStyle = BorderStyle.None;
-            this.ForeColor = Color.FromArgb(80, 80, 80);
+            this.ForeColor = Color.FromArgb(236, 239, 241);
             this.Font = SystemFonts.MenuFont;
             this.Font = new Font(this.Font.FontFamily, this.Font.Size + 1F);
         }

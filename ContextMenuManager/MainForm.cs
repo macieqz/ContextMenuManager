@@ -4,7 +4,6 @@ using ContextMenuManager.Controls;
 using ContextMenuManager.Methods;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -20,12 +19,11 @@ namespace ContextMenuManager
             this.Controls.Add(explorerRestarter);
             ToolBar.AddButtons(ToolBarButtons);
             MainBody.Controls.AddRange(MainControls);
-            ToolBarButtons[3].CanBeSelected = false;
-            ToolBarButtons[3].MouseDown += (sender, e) => RefreshApp();
+            ToolBarButtons[4].CanBeSelected = false;
+            ToolBarButtons[4].MouseDown += (sender, e) => RefreshApp();
             ToolBar.SelectedButtonChanged += (sender, e) => SwitchTab();
             SideBar.HoverIndexChanged += (sender, e) => ShowItemInfo();
             SideBar.SelectIndexChanged += (sender, e) => SwitchItem();
-            this.Shown += (sender, e) => FirstRunDownloadLanguage();
             this.FormClosing += (sender, e) => CloseMainForm();
             HoveredToShowItemPath();
             DragDropToAnalysis();
@@ -39,15 +37,15 @@ namespace ContextMenuManager
             new MyToolBarButton(AppImage.Home, AppString.ToolBar.Home),
             new MyToolBarButton(AppImage.Type, AppString.ToolBar.Type),
             new MyToolBarButton(AppImage.Star, AppString.ToolBar.Rule),
-            new MyToolBarButton(AppImage.Refresh, AppString.ToolBar.Refresh),
-            new MyToolBarButton(AppImage.About, AppString.ToolBar.About)
+            new MyToolBarButton(AppImage.Setting, AppString.SideBar.AppSetting),
+            new MyToolBarButton(AppImage.Refresh, AppString.ToolBar.Refresh)
         };
 
         private Control[] MainControls => new Control[]
         {
             shellList, shellNewList, sendToList, openWithList, winXList,
             enhanceMenusList, detailedEditList, guidBlockedList, iEList,
-            appSettingBox, languagesBox, dictionariesBox, aboutMeBox, donateBox
+            appSettingBox
         };
 
         readonly ShellList shellList = new ShellList();
@@ -62,10 +60,6 @@ namespace ContextMenuManager
         readonly IEList iEList = new IEList();
 
         readonly AppSettingBox appSettingBox = new AppSettingBox();
-        readonly LanguagesBox languagesBox = new LanguagesBox();
-        readonly DictionariesBox dictionariesBox = new DictionariesBox();
-        readonly ReadOnlyRichTextBox aboutMeBox = new ReadOnlyRichTextBox();
-        readonly DonateBox donateBox = new DonateBox();
         readonly ExplorerRestarter explorerRestarter = new ExplorerRestarter();
 
         static readonly string[] GeneralItems =
@@ -161,11 +155,7 @@ namespace ContextMenuManager
 
         static readonly string[] AboutItems =
         {
-            AppString.SideBar.AppSetting,
-            AppString.SideBar.AppLanguage,
-            AppString.SideBar.Dictionaries,
-            AppString.SideBar.AboutApp,
-            AppString.SideBar.Donate
+            AppString.SideBar.AppSetting
         };
 
         static readonly string[] SettingItems =
@@ -235,6 +225,14 @@ namespace ContextMenuManager
 
         private void SwitchTab()
         {
+            if(ToolBar.SelectedIndex == 3)
+            {
+                ShowSettingsPage();
+                return;
+            }
+
+            SideBar.Visible = true;
+            MainBody.Width = this.ClientSize.Width - SideBar.Width;
             switch(ToolBar.SelectedIndex)
             {
                 case 0:
@@ -243,10 +241,26 @@ namespace ContextMenuManager
                     SideBar.ItemNames = TypeItems; break;
                 case 2:
                     SideBar.ItemNames = OtherRuleItems; break;
-                case 4:
+                case 3:
                     SideBar.ItemNames = AboutItems; break;
             }
             SideBar.SelectedIndex = lastItemIndex[ToolBar.SelectedIndex];
+        }
+
+        private void ShowSettingsPage()
+        {
+            SideBar.Visible = false;
+            MainBody.Width = this.ClientSize.Width;
+            foreach(Control ctr in MainControls)
+            {
+                ctr.Visible = false;
+                if(ctr is MyList list) list.ClearItems();
+            }
+            appSettingBox.LoadItems();
+            appSettingBox.Visible = true;
+            lastItemIndex[3] = 0;
+            this.SuspendMainBodyWhenMove = appSettingBox.Controls.Count > 50;
+            StatusBar.Text = MyStatusBar.DefaultText;
         }
 
         private void SwitchItem()
@@ -265,7 +279,7 @@ namespace ContextMenuManager
                     SwitchTypeItem(); break;
                 case 2:
                     SwitchOtherRuleItem(); break;
-                case 4:
+                case 3:
                     SwitchAboutItem(); break;
             }
             lastItemIndex[ToolBar.SelectedIndex] = SideBar.SelectedIndex;
@@ -374,17 +388,6 @@ namespace ContextMenuManager
                 case 0:
                     appSettingBox.LoadItems(); appSettingBox.Visible = true;
                     break;
-                case 1:
-                    languagesBox.LoadLanguages(); languagesBox.Visible = true;
-                    break;
-                case 2:
-                    dictionariesBox.LoadText(); dictionariesBox.Visible = true;
-                    break;
-                case 3:
-                    if(aboutMeBox.TextLength == 0) aboutMeBox.LoadIni(AppString.Other.AboutApp);
-                    aboutMeBox.Visible = true; break;
-                case 4:
-                    donateBox.Visible = true; break;
             }
         }
 
@@ -402,7 +405,7 @@ namespace ContextMenuManager
                 { ToolBarButtons[0], GeneralItems },
                 { ToolBarButtons[1], TypeItems },
                 { ToolBarButtons[2], OtherRuleItems },
-                { ToolBarButtons[4], SettingItems }
+                { ToolBarButtons[3], SettingItems }
             };
 
             foreach(var item in dic)
@@ -431,7 +434,7 @@ namespace ContextMenuManager
                         cms.Items.Add(tsi);
                         int toolBarIndex = ToolBar.Controls.GetChildIndex(item.Key);
                         int index = i;
-                        if(toolBarIndex != 4)
+                        if(toolBarIndex != 3)
                         {
                             tsi.Click += (sender, e) => JumpItem(toolBarIndex, index);
                             cms.Opening += (sender, e) => tsi.Checked = lastItemIndex[toolBarIndex] == index;
@@ -472,21 +475,6 @@ namespace ContextMenuManager
                             };
                         }
                     }
-                }
-            }
-        }
-
-        private void FirstRunDownloadLanguage()
-        {
-            if(AppConfig.IsFirstRun && CultureInfo.CurrentUICulture.Name != "zh-CN")
-            {
-                if(AppMessageBox.Show("It is detected that you may be running this program for the first time,\n" +
-                    "and your system display language is not simplified Chinese (zh-CN),\n" +
-                    "do you need to download another language?",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    JumpItem(4, 1);
-                    languagesBox.ShowLanguageDialog();
                 }
             }
         }

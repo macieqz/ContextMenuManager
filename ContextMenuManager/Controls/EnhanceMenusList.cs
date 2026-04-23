@@ -27,7 +27,8 @@ namespace ContextMenuManager.Controls
                     {
                         if(XmlDicHelper.JudgeCulture(textXE))
                         {
-                            text = ResourceString.GetDirectString(textXE.GetAttribute("Value"));
+                            string candidate = ResourceString.GetDirectString(textXE.GetAttribute("Value"));
+                            if(!candidate.IsNullOrWhiteSpace()) text = candidate;
                         }
                     }
                     if(string.IsNullOrEmpty(path) || string.IsNullOrEmpty(text)) continue;
@@ -138,7 +139,8 @@ namespace ContextMenuManager.Controls
                 {
                     if(XmlDicHelper.JudgeCulture(textXE))
                     {
-                        item.Text = ResourceString.GetDirectString(textXE.InnerText);
+                        string candidate = ResourceString.GetDirectString(textXE.InnerText);
+                        if(!candidate.IsNullOrWhiteSpace()) item.Text = candidate;
                     }
                 }
                 if(item.Text.IsNullOrWhiteSpace()) item.Text = GuidInfo.GetText(guid);

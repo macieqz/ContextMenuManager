@@ -8,7 +8,7 @@ namespace BluePointLilac.Controls
 {
     public sealed class MyStatusBar : Panel
     {
-        public static readonly string DefaultText = $"Ver: {Application.ProductVersion}    {Application.CompanyName}";
+        public static readonly string DefaultText = $"Ver: {Application.ProductVersion}";
 
         public MyStatusBar()
         {
@@ -16,7 +16,7 @@ namespace BluePointLilac.Controls
             this.Height = 30.DpiZoom();
             this.Dock = DockStyle.Bottom;
             this.Font = SystemFonts.StatusFont;
-            this.BackColor = Color.FromArgb(70, 130, 200);
+            this.BackColor = Color.FromArgb(30, 30, 30);
             this.ForeColor = Color.White;
         }
 

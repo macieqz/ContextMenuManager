@@ -64,5 +64,29 @@ namespace BluePointLilac.Methods
             bitmap.RotateFlip(rotateType);
             return bitmap;
         }
+
+        public static Image Tint(this Image image, Color tintColor)
+        {
+            Bitmap bitmap = new Bitmap(image.Width, image.Height);
+            using(Graphics g = Graphics.FromImage(bitmap))
+            using(ImageAttributes attributes = new ImageAttributes())
+            {
+                float r = tintColor.R / 255f;
+                float gVal = tintColor.G / 255f;
+                float b = tintColor.B / 255f;
+                ColorMatrix matrix = new ColorMatrix(new[]
+                {
+                    new[] { 0f, 0f, 0f, 0f, 0f },
+                    new[] { 0f, 0f, 0f, 0f, 0f },
+                    new[] { 0f, 0f, 0f, 0f, 0f },
+                    new[] { 0f, 0f, 0f, 1f, 0f },
+                    new[] { r, gVal, b, 0f, 1f }
+                });
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                g.DrawImage(image, new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                    0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
+            }
+            return bitmap;
+        }
     }
 }

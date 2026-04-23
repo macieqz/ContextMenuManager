@@ -41,7 +41,7 @@ namespace ContextMenuManager.Methods
         public static readonly string AppConfigDir = $@"{Application.StartupPath}\Config";
         public static readonly string AppDataDir = Environment.ExpandEnvironmentVariables(@"%AppData%\ContextMenuManager");
         public static readonly string AppDataConfigDir = $@"{AppDataDir}\Config";
-        public static readonly string ConfigDir = Directory.Exists(AppConfigDir) ? AppConfigDir : AppDataConfigDir;
+        public static readonly string ConfigDir = AppDataConfigDir;
         public static readonly bool SaveToAppDir = ConfigDir == AppConfigDir;
         public static readonly bool IsFirstRun = !Directory.Exists(ConfigDir);
         public static string ConfigIni = $@"{ConfigDir}\Config.ini";
@@ -132,7 +132,7 @@ namespace ContextMenuManager.Methods
                 LanguageIniPath = "";
                 return;
             }
-            if(language == "") language = CultureInfo.CurrentUICulture.Name;
+            if(language == "") language = "en-US";
             LanguageIniPath = $@"{LangsDir}\{language}.ini";
             if(!File.Exists(LanguageIniPath))
             {

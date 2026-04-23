@@ -13,8 +13,8 @@ namespace BluePointLilac.Controls
             this.ItemHeight = 30.DpiZoom();
             this.Font = SystemFonts.MenuFont;
             this.Font = new Font(this.Font.FontFamily, this.Font.Size + 1F);
-            this.ForeColor = Color.FromArgb(80, 80, 80);
-            this.BackColor = Color.FromArgb(245, 245, 245);
+            this.ForeColor = Color.FromArgb(236, 239, 241);
+            this.BackColor = Color.FromArgb(32, 32, 32);
             this.BackgroundImageLayout = ImageLayout.None;
             this.Controls.AddRange(new Control[] { LblSeparator, PnlSelected, PnlHovered });
             PnlHovered.Paint += PaintItem;
@@ -81,19 +81,19 @@ namespace BluePointLilac.Controls
 
         readonly Panel PnlSelected = new Panel
         {
-            BackColor = Color.FromArgb(40, 140, 210),
+            BackColor = Color.FromArgb(0, 122, 204),
             ForeColor = Color.White,
             Enabled = false
         };
         readonly Panel PnlHovered = new Panel
         {
-            BackColor = Color.FromArgb(80, 180, 250),
+            BackColor = Color.FromArgb(0, 96, 160),
             ForeColor = Color.White,
             Enabled = false
         };
         readonly Label LblSeparator = new Label
         {
-            BackColor = Color.FromArgb(220, 220, 220),
+            BackColor = Color.FromArgb(58, 58, 58),
             Dock = DockStyle.Right,
             Width = 1,
         };

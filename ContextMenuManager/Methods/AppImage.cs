@@ -8,14 +8,15 @@ namespace ContextMenuManager.Methods
     static class AppImage
     {
         private static readonly double Scale = HighDpi.DpiScale / 1.5;
+        private static readonly Color ToolbarBlue = Color.FromArgb(33, 150, 243);
         ///<summary>主页</summary>
-        public static readonly Image Home = Resources.Home.ResizeImage(Scale);
+        public static readonly Image Home = Resources.Home.ResizeImage(Scale).Tint(ToolbarBlue);
         ///<summary>文件类型</summary>
-        public static readonly Image Type = Resources.Type.ResizeImage(Scale);
+        public static readonly Image Type = Resources.Type.ResizeImage(Scale).Tint(ToolbarBlue);
         ///<summary>五角星</summary>
-        public static readonly Image Star = Resources.Star.ResizeImage(Scale);
+        public static readonly Image Star = Resources.Star.ResizeImage(Scale).Tint(ToolbarBlue);
         ///<summary>刷新</summary>
-        public static readonly Image Refresh = Resources.Refresh.ResizeImage(Scale);
+        public static readonly Image Refresh = Resources.Refresh.ResizeImage(Scale).Tint(ToolbarBlue);
         ///<summary>关于问号</summary>
         public static readonly Image About = Resources.About.ResizeImage(Scale);
         ///<summary>设置按钮</summary>
